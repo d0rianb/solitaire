@@ -85,6 +85,7 @@ window.onclick = e => {
         Math.min(alreadySelected.x, selectedCell.x) + Math.abs(Math.ceil((alreadySelected.x - selectedCell.x) / 2)),
         Math.min(alreadySelected.y, selectedCell.y) + Math.abs(Math.ceil((alreadySelected.y - selectedCell.y) / 2)),
       )!
+      if ((cellInBetween.state & CellType.Pion) !== CellType.Pion) return
       cellInBetween.state &= ~CellType.Pion
       cellInBetween.state |= CellType.Empty
       selectedCell.state &= ~CellType.Empty
@@ -103,7 +104,9 @@ window.onclick = e => {
 let { width, height } = getWindowDimensions()
 Renderer.create(width, height)
 const solitaire = new Game('Solitaire')
-let grid = new GameGrid(width! / 10, height! / 5, width! * 9 / 10, height! * 4 / 5)
+const dim = Math.min(width!, height!)
+const padding = dim * 1 / 10
+const grid = new GameGrid((width! - dim) / 2 + padding, (height! - dim) / 2 + padding, width! - padding, height! - padding)
 
 Interface.addItem(() => `Nombre de pion restants: ${grid.cells.filter(cell => (cell.state & CellType.Pion) === CellType.Pion).length}`, 'top-right')
 
